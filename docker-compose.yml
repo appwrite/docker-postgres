@@ -1,0 +1,17 @@
+services:
+  postgresql:
+    build: 
+      context: .
+    restart: unless-stopped
+    volumes:
+      - appwrite-postgresql:/var/lib/postgresql:rw
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${_APP_DB_SCHEMA}
+      - POSTGRES_USER=${_APP_DB_USER}
+      - POSTGRES_PASSWORD=${_APP_DB_PASS}
+    command: "postgres"
+
+volumes:
+  appwrite-postgresql:
