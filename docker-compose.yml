@@ -7,7 +7,7 @@ services:
       context: .
     restart: unless-stopped
     volumes:
-      - appwrite-postgresql:/var/lib/postgresql/data:rw
+      - appwrite-postgresql:/var/lib/postgresql:rw
     ports:
       - "5432:5432"
     environment:
