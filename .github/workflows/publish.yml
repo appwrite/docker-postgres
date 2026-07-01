@@ -5,9 +5,16 @@ on:
     tags:
       - '*'
 
+env:
+  DEFAULT_PG_MAJOR: '18'
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pg_major: ['17', '18']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,9 +36,16 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: appwrite/postgres
+          flavor: |
+            latest=false
+            prefix=${{ matrix.pg_major }}-,onlatest=false
           tags: |
+            type=raw,value=${{ matrix.pg_major }},prefix=
             type=semver,pattern={{major}}.{{minor}}.{{patch}}
             type=match,pattern=.*RC.*,group=0
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},prefix=,enable=${{ matrix.pg_major == env.DEFAULT_PG_MAJOR }}
+            type=match,pattern=.*RC.*,group=0,prefix=,enable=${{ matrix.pg_major == env.DEFAULT_PG_MAJOR }}
+            type=raw,value=latest,prefix=,enable=${{ matrix.pg_major == env.DEFAULT_PG_MAJOR }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -39,6 +53,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           build-args: |
+            PG_MAJOR=${{ matrix.pg_major }}
             VERSION=${{ steps.meta.outputs.version }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
