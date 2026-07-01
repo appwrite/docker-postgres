@@ -72,10 +72,12 @@ done
 echo "----- CREATE EXTENSION IF NOT EXISTS -----"
 for ext in "${EXTENSIONS[@]}"; do
   result="$(psql "CREATE EXTENSION IF NOT EXISTS \"$ext\";")"
-  if [[ "$result" == "CREATE EXTENSION" || -z "$result" ]]; then
+  # psql -tA prints exactly "CREATE EXTENSION" on success. Anything else
+  # (an error, or empty output from a dead container) is a failure.
+  if [[ "$result" == "CREATE EXTENSION" ]]; then
     echo "CREATED: $ext"
   else
-    fail "CREATE EXTENSION $ext -> $result"
+    fail "CREATE EXTENSION $ext -> ${result:-<no output>}"
   fi
 done
 
@@ -90,9 +92,9 @@ echo "----- pg_cron loaded -----"
 jobid="$(psql "SELECT cron.schedule('verify-job','* * * * *','SELECT 1');")"
 if [[ "$jobid" =~ ^[0-9]+$ ]]; then
   echo "PASS: pg_cron.schedule returned job $jobid"
-  psql "SELECT cron.unschedule('verify-job');" >/dev/null
+  psql "SELECT cron.unschedule($jobid);" >/dev/null
 else
-  fail "pg_cron.schedule -> $jobid"
+  fail "pg_cron.schedule -> ${jobid:-<no output>}"
 fi
 
 echo "----- pgvector usable -----"
@@ -104,7 +106,12 @@ else
 fi
 
 echo "----- postgis usable -----"
-echo "postgis_version: $(psql 'SELECT postgis_version();')"
+postgis_version="$(psql 'SELECT postgis_version();')"
+if [[ -n "$postgis_version" && "$postgis_version" != *ERROR* ]]; then
+  echo "PASS: postgis_version = $postgis_version"
+else
+  fail "postgis_version() -> ${postgis_version:-<no output>}"
+fi
 
 echo
 if [[ "$FAILED" == "0" ]]; then

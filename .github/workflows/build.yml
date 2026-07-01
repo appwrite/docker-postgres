@@ -30,6 +30,8 @@ jobs:
           build-args: |
             PG_MAJOR=${{ matrix.pg_major }}
           tags: appwrite/postgres:ci-${{ matrix.pg_major }}
+          cache-from: type=gha,scope=pg-${{ matrix.pg_major }}
+          cache-to: type=gha,mode=max,scope=pg-${{ matrix.pg_major }}
 
       - name: Verify extensions and preload libraries
         env:

@@ -54,7 +54,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           build-args: |
             PG_MAJOR=${{ matrix.pg_major }}
-            VERSION=${{ steps.meta.outputs.version }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
