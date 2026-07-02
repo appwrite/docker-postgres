@@ -1,7 +1,9 @@
 services:
   postgresql:
-    build: 
+    build:
       context: .
+      args:
+        PG_MAJOR: ${PG_MAJOR:-18}
     restart: unless-stopped
     volumes:
       - appwrite-postgresql:/var/lib/postgresql:rw
