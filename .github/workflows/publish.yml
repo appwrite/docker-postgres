@@ -48,7 +48,7 @@ jobs:
             type=raw,value=latest,prefix=,enable=${{ matrix.pg_major == env.DEFAULT_PG_MAJOR }}
 
       - name: Build and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
           context: .
           platforms: linux/amd64,linux/arm64
