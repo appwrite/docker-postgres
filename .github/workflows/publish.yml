@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pg_major: ['17', '18']
+        pg_major: ['17', '18', '19']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
