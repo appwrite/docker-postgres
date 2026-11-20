@@ -31,19 +31,20 @@ shared_preload_libraries = 'pg_stat_statements,pg_cron'
 
 ## Supported major versions and tags
 
-Built for each PostgreSQL major version Appwrite Cloud advertises (`Engine::getSupportedVersions()`): **17** and **18**. Publishing a release tag (e.g. `0.2.0`) produces, for each major:
+Built for each PostgreSQL major version Appwrite Cloud advertises (`Engine::getSupportedVersions()`): **17**, **18** and **19**. Publishing a release tag (e.g. `0.3.0`) produces, for each major:
 
 | Tag | Meaning |
 | --- | ------- |
-| `appwrite/postgres:18`, `appwrite/postgres:17` | Floating tag for the major version |
-| `appwrite/postgres:18-0.2.0`, `appwrite/postgres:17-0.2.0` | Immutable major + release |
-| `appwrite/postgres:0.2.0`, `appwrite/postgres:latest` | Default major (18), for backward compatibility |
+| `appwrite/postgres:19`, `appwrite/postgres:18`, `appwrite/postgres:17` | Floating tag for the major version |
+| `appwrite/postgres:19-0.3.0`, `appwrite/postgres:18-0.3.0`, `appwrite/postgres:17-0.3.0` | Immutable major + release |
+| `appwrite/postgres:0.3.0`, `appwrite/postgres:latest` | Default major (18), for backward compatibility |
 
 The default-major bare-semver tags keep the existing `version` -> image mapping working until the per-version wiring lands.
 
 ## Build
 
 ```bash
+docker build --build-arg PG_MAJOR=19 -t appwrite/postgres:19 .
 docker build --build-arg PG_MAJOR=18 -t appwrite/postgres:18 .
 docker build --build-arg PG_MAJOR=17 -t appwrite/postgres:17 .
 ```
