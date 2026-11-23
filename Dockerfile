@@ -1,4 +1,4 @@
-ARG PG_MAJOR=18
+ARG PG_MAJOR=19@sha256:bb6e70add742cd868fb62cb3b2f67d1dd2bdd2b65a521e778420748753687c60
 
 # The upstream image ships gosu built with Go 1.24.6; rebuild it with a patched Go.
 FROM --platform=$BUILDPLATFORM golang:1.27.4-trixie AS gosu
